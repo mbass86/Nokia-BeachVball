@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Team {
+  id          String   @id @default(uuid())
+  name        String
+  division    String   // 'A' or 'B'
+  captainName String
+  captainEmail String  @unique
+  users       User[]
+  homeMatches Match[]  @relation("HomeMatches")
+  awayMatches Match[]  @relation("AwayMatches")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  password String? // Hashed password for local credentials
+  role     String  // 'Captain', 'Co-Captain', 'Player', 'Spare'
+  teamId   String?
+  team     Team?   @relation(fields: [teamId], references: [id])
+}
+
+model Match {
+  id          String   @id @default(uuid())
+  date        DateTime
+  time        String
+  court       String
+  type        String   // 'Divisional', 'Crossover'
+  status      String   // 'Upcoming', 'Completed'
+  
+  homeTeamId  String
+  homeTeam    Team     @relation("HomeMatches", fields: [homeTeamId], references: [id])
+  
+  awayTeamId  String
+  awayTeam    Team     @relation("AwayMatches", fields: [awayTeamId], references: [id])
+  
+  homeSetsWon Int      @default(0)
+  awaySetsWon Int      @default(0)
+  
+  isReported  Boolean  @default(false)
+}
