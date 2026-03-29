@@ -165,10 +165,28 @@ tr:hover td { background-color: var(--surface-hover); }
   gap: 2rem;
 }
 
+.mobile-topbar {
+  display: none; /* Hidden on massive desktop screens where Sidebar does the heavy lifting */
+}
+
 /* ========================================= */
 /* MOBILE RESPONSIVE MEDIA QUERIES           */
 /* ========================================= */
 @media screen and (max-width: 768px) {
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    height: 60px;
+    background: rgba(26, 29, 36, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
   .app-container {
     flex-direction: column;
   }
