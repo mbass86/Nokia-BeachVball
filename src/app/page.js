@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div>
       <header style={{ marginBottom: '2rem' }}>
-        <h1>Beach Volleyball League</h1>
+        <h1>Nokia BeachVBall League</h1>
         <p>Welcome back to the season! Check the latest standings, schedules, and league updates.</p>
       </header>
       

@@ -2,7 +2,7 @@ import './globals.css';
 import Sidebar from '@/components/Sidebar';
 
 export const metadata = {
-  title: 'Beach Volleyball League',
+  title: 'Nokia BeachVball League',
   description: 'Nokia Beach Volleyball League Management System',
 };
 
