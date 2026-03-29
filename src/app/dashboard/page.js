@@ -43,7 +43,7 @@ export default async function Dashboard() {
         <p>Manage your team roster ("{myTeam.name}") and submit scores.</p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) minmax(300px, 1fr)', gap: '2rem' }}>
+      <div className="dashboard-grid">
         
         {/* Left Column: Missing Scores & Roster */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>

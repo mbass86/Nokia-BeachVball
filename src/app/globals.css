@@ -6,7 +6,7 @@
   --surface-hover: #262a34;
   --border-color: #2e3340;
   
-  --primary-color: #0088ff; /* Brightened Nokia Blue for Dark Mode */
+  --primary-color: #0088ff;
   --primary-dark: #004ecc;
   --secondary-color: #0ea5e9;
   --accent-color: #ff5f6d;
@@ -28,6 +28,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -50,7 +51,7 @@ button {
   font-family: inherit;
 }
 
-/* Layout Utilities */
+/* Layout Utilities Desktop */
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -122,41 +123,9 @@ p {
   letter-spacing: 0.05em;
 }
 
-.badge.primary {
-  background: rgba(0, 136, 255, 0.15);
-  color: var(--primary-color);
-}
-
-.badge.secondary {
-  background: rgba(14, 165, 233, 0.15);
-  color: var(--secondary-color);
-}
-
-.badge.danger {
-  background: rgba(255, 95, 109, 0.15);
-  color: var(--accent-color);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  transition: all var(--transition);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 78, 204, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 78, 204, 0.5);
-}
+.badge.primary { background: rgba(0, 136, 255, 0.15); color: var(--primary-color); }
+.badge.secondary { background: rgba(14, 165, 233, 0.15); color: var(--secondary-color); }
+.badge.danger { background: rgba(255, 95, 109, 0.15); color: var(--accent-color); }
 
 .table-wrapper {
   overflow-x: auto;
@@ -169,6 +138,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 600px; /* Force scroll on extremely tiny tables instead of crushing */
 }
 
 th, td {
@@ -185,10 +155,55 @@ th {
   letter-spacing: 0.05em;
 }
 
-tr:last-child td {
-  border-bottom: none;
+tr:last-child td { border-bottom: none; }
+tr:hover td { background-color: var(--surface-hover); }
+
+/* Custom Component Layout Grids (Global) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 2fr) minmax(300px, 1fr);
+  gap: 2rem;
 }
 
-tr:hover td {
-  background-color: var(--surface-hover);
+/* ========================================= */
+/* MOBILE RESPONSIVE MEDIA QUERIES           */
+/* ========================================= */
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 1.5rem 1rem;
+    padding-bottom: 90px; /* Clear the bottom navigation bar */
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .glass-panel {
+    padding: 1.25rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Specifically target ANY grid that uses minmax(340px, ...) so cards shrink to standard phone 100vw */
+  [style*="grid-template-columns"] {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)) !important;
+  }
 }
