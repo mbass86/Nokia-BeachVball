@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { mockTeams, mockUsers, mockSchedule } from '@/lib/mockData';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // Basic clearing for re-seeding safely
