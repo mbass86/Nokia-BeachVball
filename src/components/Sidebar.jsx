@@ -12,6 +12,7 @@ const NavigationItems = [
 
 const ActionItems = [
   { name: 'Captain Dashboard', mobileName: 'Dash', icon: '👑', href: '/dashboard' },
+  { name: 'Admin Control', mobileName: 'Admin', icon: '🔒', href: '/admin' },
   { name: 'Rules', mobileName: 'Rules', icon: '📋', href: '/rules' },
 ];
 
