@@ -30,6 +30,31 @@ export default async function Dashboard() {
     }
   });
 
+  // 3. Fetch next upcoming match genuinely from DB
+  const upcomingMatches = await prisma.match.findMany({
+    where: {
+      status: 'Upcoming',
+      OR: [ { homeTeamId: myTeamId }, { awayTeamId: myTeamId } ]
+    },
+    include: { homeTeam: true, awayTeam: true },
+    orderBy: { date: 'asc' },
+    take: 1
+  });
+  const upNext = upcomingMatches[0];
+
+  // 4. Architect the Native Email BCC Blaster (Option A)
+  const spares = await prisma.user.findMany({ where: { role: 'Spare' }, select: { email: true }});
+  const bccList = spares.map(s => s.email).join(',');
+  
+  let mailtoLink = '#';
+  if (upNext) {
+     const opponent = upNext.homeTeamId === myTeam.id ? upNext.awayTeam.name : upNext.homeTeam.name;
+     const formattedDate = new Date(upNext.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+     const encodedSubject = encodeURIComponent(`Nokia BeachVBall: ${myTeam.name} needs a Sub!`);
+     const encodedBody = encodeURIComponent(`Hi everyone!\n\nWe are looking for a spare player to sub in for our upcoming match!\n\nGame Details:\nAgainst: ${opponent}\nDate: ${formattedDate}\nTime: ${upNext.time}\nLocation: ${upNext.court}\n\nPlease reply directly to me if you are available to play! First come, first served.\n\nThanks,\n${myTeam.captainName}`);
+     mailtoLink = `mailto:?bcc=${bccList}&subject=${encodedSubject}&body=${encodedBody}`;
+  }
+
   if (!myTeam) {
     return <div>Loading Dashboard Data (Ensure DB is seeded!)</div>;
   }
@@ -85,12 +110,25 @@ export default async function Dashboard() {
         <section style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <div className="card">
             <h3 style={{ marginBottom: '1rem' }}>Up Next</h3>
-            <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontWeight: 600 }}>vs How I Set Your Mother</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>Tue, Jun 09 - 11:45</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Court 1</div>
-              <div className="badge primary" style={{ marginTop: '0.5rem' }}>Divisional Match</div>
-            </div>
+            {upNext ? (
+              <div style={{ background: 'var(--bg-color)', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
+                <div style={{ fontWeight: 600 }}>vs {upNext.homeTeamId === myTeam.id ? upNext.awayTeam.name : upNext.homeTeam.name}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                  {new Date(upNext.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - {upNext.time}
+                </div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>{upNext.court}</div>
+                
+                {spares.length > 0 ? (
+                  <a href={mailtoLink} className="btn badge danger" style={{ background: 'var(--accent-color)', color: 'white', display: 'block', textAlign: 'center', padding: '0.5rem', fontWeight: 600, textDecoration: 'none' }}>
+                    🚨 Alert {spares.length} Spares
+                  </a>
+                ) : (
+                   <div style={{color: 'var(--text-muted)', fontSize:'0.8rem'}}>No spares registered yet.</div>
+                )}
+              </div>
+            ) : (
+               <div style={{ color: 'var(--text-muted)' }}>No upcoming matches scheduled.</div>
+            )}
           </div>
           
           <div className="card">

@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import AdminMatchEditor from './AdminMatchEditor';
+import AdminTeamEditor from './AdminTeamEditor';
 import { logoutAdmin } from '@/app/actions/adminActions';
 
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,11 @@ export default async function AdminCenter() {
     }
   });
 
+  // Fetch all registered teams securely
+  const teams = await prisma.team.findMany({
+    orderBy: { name: 'asc' }
+  });
+
   return (
     <div>
       <header style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
@@ -44,6 +50,12 @@ export default async function AdminCenter() {
            </button>
         </form>
       </header>
+
+      <section style={{ marginBottom: '4rem' }}>
+         <h2 style={{color: 'var(--primary-color)', marginBottom: '1.5rem'}}>League Finance & Defaults Tracker</h2>
+         <p style={{marginBottom: '2rem'}}>Flip teams to 'Paid' instantly securely bypassing generic caching.</p>
+         <AdminTeamEditor teams={teams} />
+      </section>
 
       <section style={{ marginBottom: '4rem' }}>
          <h2 style={{color: 'var(--primary-color)', marginBottom: '1.5rem'}}>Universal Schedule & Score Editor</h2>

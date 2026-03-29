@@ -17,6 +17,7 @@ model Team {
   users       User[]
   homeMatches Match[]  @relation("HomeMatches")
   awayMatches Match[]  @relation("AwayMatches")
+  hasPaid     Boolean  @default(false)
 }
 
 model User {

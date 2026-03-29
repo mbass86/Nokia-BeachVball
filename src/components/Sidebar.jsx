@@ -8,6 +8,7 @@ const NavigationItems = [
   { name: 'Schedule', mobileName: 'Games', icon: '📅', href: '/schedule' },
   { name: 'Standings', mobileName: 'Ranks', icon: '🏆', href: '/standings' },
   { name: 'Team Rosters', mobileName: 'Roster', icon: '👥', href: '/rosters' },
+  { name: 'Spare Pool', mobileName: 'Spares', icon: '🆘', href: '/spares' },
 ];
 
 const ActionItems = [

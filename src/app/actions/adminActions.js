@@ -81,3 +81,25 @@ export async function updateMatchAdmin(formData) {
     return { success: false, error: error.message };
   }
 }
+
+export async function toggleTeamPaymentStatus(teamId, currentStatus) {
+  const cookieStore = await cookies();
+  if (cookieStore.get('admin_session')?.value !== 'true') {
+    return { success: false, error: 'Unauthorized Write Access. Please unlock the database.' };
+  }
+
+  try {
+    await prisma.team.update({
+      where: { id: teamId },
+      data: { hasPaid: !currentStatus }
+    });
+
+    // Invalidate the cache entirely
+    revalidatePath('/rosters');
+    revalidatePath('/admin');
+    
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
